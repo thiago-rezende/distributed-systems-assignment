@@ -13,10 +13,10 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 # Setting up the project name and version
-project(CMakeStarterProject
-        VERSION 2.2.1
-        DESCRIPTION "A Simple C++ Starter Project Using CMake"
-        HOMEPAGE_URL "https://github.com/thiago-rezende/cmake-starter-project"
+project(DistributedSystemsAssignment
+        VERSION 0.0.1
+        DESCRIPTION "Distributed Systems Assignment"
+        HOMEPAGE_URL "https://github.com/thiago-rezende/distributed-systems-assignment"
         LANGUAGES CXX)
 
 # Generate an config.h file based on config.in file
