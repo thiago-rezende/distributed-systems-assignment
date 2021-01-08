@@ -25,25 +25,45 @@ int main()
     H_INFO("PROJECT NAME => {}", "Producer Consumer - First Implementation");
     H_INFO("PROJECT VERSION => {}", PROJECT_VERSION);
 
+    /* Application buffer */
     Buffer<uint8_t> buffer;
+
+    /* Producer and Consumer */
     Producer<uint8_t> p(&buffer);
     Consumer<uint8_t> c(&buffer);
 
+    /**
+     * @brief Sequential produce and consume
+     *
+     */
     for (size_t i = 0; i < 5; i++)
     {
+        /**
+         * @brief Produce a random number and send to buffer
+         *
+         */
         p.Produce([]() {
+            /* Generating random number */
             uint8_t value = random_number();
+
             std::cout << "Produced " << static_cast<int>(value) << std::endl;
 
+            /* Sleep for 200 miliseconds */
             using namespace std::literals;
-
             std::this_thread::sleep_for(200ms);
+
+            /* Returns the value to store in buffer */
             return value;
         });
 
+        /**
+         * @brief Consumes the next buffered value
+         *
+         */
         c.Consume([](uint8_t value) {
             std::cout << "Consumed " << static_cast<int>(value) << std::endl;
 
+            /* Sleep for 200 miliseconds */
             using namespace std::literals;
             std::this_thread::sleep_for(200ms);
         });

@@ -16,6 +16,7 @@
 #include <third_implementation/producer.hpp>
 #include <third_implementation/consumer.hpp>
 
+/* Cli args utility */
 #include <CLI11.hpp>
 
 int main(int argc, char **argv)
@@ -41,48 +42,68 @@ int main(int argc, char **argv)
     H_INFO("PROJECT NAME => {}", "Producer Consumer - Third Implementation");
     H_INFO("PROJECT VERSION => {}", PROJECT_VERSION);
 
+    /* Buffer maximum size */
     const uint8_t max_buffer_size = 10;
+
+    /* Application buffer */
     Buffer<uint8_t> buffer;
+
+    /* Producer and Consumer */
     Producer<uint8_t> p(&buffer);
     Consumer<uint8_t> c(&buffer);
 
+    /* Thread synt utils */
     std::mutex mut;
     std::condition_variable cv;
 
+    /* Producer thread function */
     std::function<void()> producer_thread_function = [&]() {
         while (true)
         {
+            /* Lock and wait until has space to produce */
             std::unique_lock<std::mutex> ul(mut);
             cv.wait(ul, [&]() { return buffer.size() < max_buffer_size; });
 
+            /* Produce the data */
             p.Produce([]() {
                 uint8_t value = random_number();
+
+                std::cout << "T[" << std::this_thread::get_id() << "] Produced " << static_cast<int>(value) << std::endl;
+
+                /* Sleep for 200 miliseconds */
                 using namespace std::literals;
                 std::this_thread::sleep_for(200ms);
-                std::cout << "T[" << std::this_thread::get_id() << "] Produced " << static_cast<int>(value) << std::endl;
                 return value;
             });
 
+            /* Notify and release */
             cv.notify_all();
         }
     };
 
+    /* Consumer thread function */
     std::function<void()> consumer_thread_function = [&]() {
         while (true)
         {
+            /* Lcok and wait until has data to consume */
             std::unique_lock<std::mutex> ul(mut);
             cv.wait(ul, [&]() { return buffer.size() > 0; });
 
+            /* Consumes data */
             c.Consume([](uint8_t value) {
+                std::cout << "T[" << std::this_thread::get_id() << "] Consumed " << static_cast<int>(value) << std::endl;
+
+                /* Sleep for 200 miliseconds */
                 using namespace std::literals;
                 std::this_thread::sleep_for(200ms);
-                std::cout << "T[" << std::this_thread::get_id() << "] Consumed " << static_cast<int>(value) << std::endl;
             });
 
+            /* Notify and release */
             cv.notify_all();
         }
     };
 
+    /* Application thread pools */
     std::vector<std::thread> producer_thread_pool;
     std::vector<std::thread> consumer_thread_pool;
 

@@ -13,16 +13,35 @@
 
 #include <third_implementation/base.hpp>
 
+/**
+ * @brief Producer class
+ *
+ * @tparam _Type Data type to produce
+ */
 template <typename _Type>
 class Producer
 {
 private:
+    /**
+     * @brief Buffer to store produced values
+     *
+     */
     Buffer<_Type> *m_buffer;
 
 public:
+    /**
+     * @brief Construct a new Producer object
+     *
+     * @param buffer Pointer to data buffer
+     */
     Producer(Buffer<_Type> *buffer)
         : m_buffer(buffer) {}
 
+    /**
+     * @brief Produces the data and send to buffer
+     *
+     * @param function Function to handle data production
+     */
     void Produce(ProducerFunction<_Type> function)
     {
         _Type value = function();
