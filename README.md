@@ -43,7 +43,7 @@
     |    |    └── logger.cpp        # Logger utils implementation.
     |    ├── pch.h                  # Pre-compiled header.
     |    ├── base.hpp
-    |    ├── sempahore.hpp
+    |    ├── sempahore.hpp          # Second impl semaphore.
     |    ├── producer.hpp
     |    ├── consumer.hpp
     |    ├── main.cpp               # Second impl entrypoint.
