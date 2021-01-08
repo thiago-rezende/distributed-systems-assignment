@@ -36,7 +36,7 @@ int main()
      * @brief Sequential produce and consume
      *
      */
-    for (size_t i = 0; i < 5; i++)
+    while (true)
     {
         /**
          * @brief Produce a random number and send to buffer
