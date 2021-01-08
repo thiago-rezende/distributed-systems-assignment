@@ -45,6 +45,7 @@ add_subdirectory(${VENDOR}/spdlog)
 # Setting the project folders
 add_subdirectory(first_implementation)
 add_subdirectory(second_implementation)
+add_subdirectory(third_implementation)
 
 # Visual Studio Config
 if(MSVC)

@@ -26,17 +26,37 @@
  ```
     .
     ├── .github                     # Repository stuff.
-    ├──  first_implementation       # Application folder.
-    |    ├── assets                 # Assets folder.
+    ├──  first_implementation       # First impl folder.
     |    ├── core                   # Core functionalities folder.
     |    |    ├── logger.h          # Logger utils.
     |    |    └── logger.cpp        # Logger utils implementation.
     |    ├── pch.h                  # Pre-compiled header.
-    |    ├── base.hpp               # Application entrypoint.
-    |    ├── producer.hpp           # Application entrypoint.
-    |    ├── consumer.hpp           # Application entrypoint.
-    |    ├── main.cpp               # Application entrypoint.
-    |    └── CMakeLists.txt         # Application CMake build script.
+    |    ├── base.hpp
+    |    ├── producer.hpp
+    |    ├── consumer.hpp
+    |    ├── main.cpp               # First impl entrypoint.
+    |    └── CMakeLists.txt         # First impl CMake build script.
+    ├──  second_implementation      # Second impl folder.
+    |    ├── core                   # Core functionalities folder.
+    |    |    ├── logger.h          # Logger utils.
+    |    |    └── logger.cpp        # Logger utils implementation.
+    |    ├── pch.h                  # Pre-compiled header.
+    |    ├── base.hpp
+    |    ├── sempahore.hpp
+    |    ├── producer.hpp
+    |    ├── consumer.hpp
+    |    ├── main.cpp               # Second impl entrypoint.
+    |    └── CMakeLists.txt         # Second impl CMake build script.
+    ├──  third_implementation       # Third impl folder.
+    |    ├── core                   # Core functionalities folder.
+    |    |    ├── logger.h          # Logger utils.
+    |    |    └── logger.cpp        # Logger utils implementation.
+    |    ├── pch.h                  # Pre-compiled header.
+    |    ├── base.hpp
+    |    ├── producer.hpp
+    |    ├── consumer.hpp
+    |    ├── main.cpp               # Third impl entrypoint.
+    |    └── CMakeLists.txt         # Third impl CMake build script.
     ├── vendor                      # Third-party packages will be here.
     |    └── spdlog                 # Fast C++ logging library.
     └── CMakeLists.txt              # Main CMake build script.

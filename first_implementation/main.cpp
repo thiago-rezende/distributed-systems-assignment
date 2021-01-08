@@ -34,11 +34,18 @@ int main()
         p.Produce([]() {
             uint8_t value = random_number();
             std::cout << "Produced " << static_cast<int>(value) << std::endl;
+
+            using namespace std::literals;
+
+            std::this_thread::sleep_for(200ms);
             return value;
         });
 
         c.Consume([](uint8_t value) {
             std::cout << "Consumed " << static_cast<int>(value) << std::endl;
+
+            using namespace std::literals;
+            std::this_thread::sleep_for(200ms);
         });
     }
 
