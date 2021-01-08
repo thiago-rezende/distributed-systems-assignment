@@ -19,9 +19,6 @@ project(DistributedSystemsAssignment
         HOMEPAGE_URL "https://github.com/thiago-rezende/distributed-systems-assignment"
         LANGUAGES CXX)
 
-# Generate an config.h file based on config.in file
-configure_file(${CMAKE_SOURCE_DIR}/application/config.in ${CMAKE_SOURCE_DIR}/application/config.h @ONLY NEWLINE_STYLE LF)
-
 # Setting the install prefix
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
 
@@ -53,7 +50,7 @@ if(MSVC)
     ## Enable folders
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
     ## Application
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT application)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT first_implementation)
     set_property(TARGET first_implementation PROPERTY FOLDER "First Implementation")
     ## Utils
     set_property(TARGET copy_resources_first_implementation PROPERTY FOLDER "Utils")

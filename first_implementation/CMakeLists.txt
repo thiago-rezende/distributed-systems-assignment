@@ -19,6 +19,9 @@ set(FIRST_IMPLEMENTATION_SOURCES
     "core/logger.cpp"
 )
 
+# Generate an config.h file based on config.in file
+configure_file(${CMAKE_SOURCE_DIR}/first_implementation/config.in ${CMAKE_SOURCE_DIR}/first_implementation/config.h @ONLY NEWLINE_STYLE LF)
+
 # First implementation executable
 add_executable(first_implementation ${FIRST_IMPLEMENTATION_SOURCES})
 
