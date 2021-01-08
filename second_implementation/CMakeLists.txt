@@ -9,6 +9,7 @@ set(SECOND_IMPLEMENTATION_HEADERS
     "pch.h"
     "core/logger.h"
     "base.hpp"
+    "semaphore.hpp"
     "producer.hpp"
     "consumer.hpp"
 )

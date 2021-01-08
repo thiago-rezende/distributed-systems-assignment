@@ -13,6 +13,7 @@
 #include <config.h>
 
 #include <second_implementation/base.hpp>
+#include <second_implementation/semaphore.hpp>
 #include <second_implementation/producer.hpp>
 #include <second_implementation/consumer.hpp>
 
@@ -30,14 +31,12 @@ int main()
     Producer<uint8_t> p(&buffer);
     Consumer<uint8_t> c(&buffer);
 
-    std::mutex mut;
-    std::condition_variable cv;
+    Semaphore sem(1);
 
     std::function<void()> producer_thread_function = [&]() {
         while (true)
         {
-            std::unique_lock<std::mutex> ul(mut);
-            cv.wait(ul, [&]() { return buffer.size() <= 0; });
+            sem.wait();
 
             while (buffer.size() != max_buffer_size)
             {
@@ -48,15 +47,15 @@ int main()
                 });
             }
 
-            cv.notify_one();
+            sem.notify();
         }
     };
 
     std::function<void()> consumer_thread_function = [&]() {
         while (true)
         {
-            std::unique_lock<std::mutex> ul(mut);
-            cv.wait(ul, [&]() { return buffer.size() >= max_buffer_size; });
+            sem.wait();
+
             while (buffer.size() != 0)
             {
                 c.Consume([](uint8_t value) {
@@ -64,7 +63,7 @@ int main()
                 });
             }
 
-            cv.notify_one();
+            sem.notify();
         }
     };
 
