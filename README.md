@@ -21,6 +21,7 @@
 
  - Libraries Included
     - [Spdlog][spdlog-url]
+    - [CLI11][cli11-url]
 
  - Project structure
  ```
@@ -61,6 +62,42 @@
     |    └── spdlog                 # Fast C++ logging library.
     └── CMakeLists.txt              # Main CMake build script.
 ```
+
+## Instructions
+> Requirements
+ - C++ 17 compatible compiler
+ - CMake `>3.16.0`
+ - Git
+
+> Clone the repo
+```sh
+git clone --recursive https://github.com/thiago-rezende/distributed-systems-assignment
+```
+
+> Create build dir
+```sh
+cd distributed-systems-assignment
+mkdir build
+```
+
+> Generate projects and Build
+```sh
+cd build
+cmake ..
+cmake --build .
+```
+
+> Run the binaries
+```sh
+./bin/first_implementation
+```
+```sh
+./bin/second_implementation
+```
+```sh
+./bin/third_implementation --help
+```
+
  ## Compatibility
 
  | Toolset | Windows |  Linux  |   MacOS    |
@@ -72,6 +109,7 @@
 <!-- Links -->
 [cmake-url]: https://cmake.org/
 [spdlog-url]: https://github.com/gabime/spdlog
+[cli11-url]: https://github.com/CLIUtils/CLI11
 
 <!-- Badges -->
 [build-status-badge]: https://github.com/thiago-rezende/distributed-systems-assignment/workflows/build/badge.svg
