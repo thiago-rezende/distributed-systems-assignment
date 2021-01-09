@@ -5,6 +5,11 @@
 ## [Unreleased]
 
 
+## [v1.1.1]
+ - [b256cdd] docs: update version number (Thiago Rezende)
+ - [3a8c532] feat: added debug logs (Thiago Rezende)
+ - [402ff16] docs: update changelog (Thiago Rezende)
+
 ## [v1.1.0]
  - [79b5373] refactor: used a more simplistic aproach (Thiago Rezende)
 
