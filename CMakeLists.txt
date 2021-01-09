@@ -14,7 +14,7 @@ endif()
 
 # Setting up the project name and version
 project(DistributedSystemsAssignment
-        VERSION 1.0.0
+        VERSION 1.1.1
         DESCRIPTION "Distributed Systems Assignment"
         HOMEPAGE_URL "https://github.com/thiago-rezende/distributed-systems-assignment"
         LANGUAGES CXX)
