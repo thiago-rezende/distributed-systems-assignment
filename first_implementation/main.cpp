@@ -12,9 +12,7 @@
 #include <first_implementation/pch.h>
 #include <config.h>
 
-#include <first_implementation/base.hpp>
-#include <first_implementation/producer.hpp>
-#include <first_implementation/consumer.hpp>
+#include <first_implementation/helpers.hpp>
 
 int main()
 {
@@ -26,11 +24,31 @@ int main()
     H_INFO("PROJECT VERSION => {}", PROJECT_VERSION);
 
     /* Application buffer */
-    Buffer<uint8_t> buffer;
+    std::deque<uint8_t> buffer;
 
-    /* Producer and Consumer */
-    Producer<uint8_t> p(&buffer);
-    Consumer<uint8_t> c(&buffer);
+    /* Producer function */
+    std::function<void()> producer = [&]() {
+        uint8_t value = random_number();
+        buffer.push_back(value);
+
+        std::cout << "Produced " << static_cast<int>(value) << std::endl;
+
+        /* Sleep for 200 miliseconds */
+        using namespace std::literals;
+        std::this_thread::sleep_for(200ms);
+    };
+
+    /* Consumer function */
+    std::function<void()> consumer = [&]() {
+        uint8_t value = buffer.front();
+        buffer.pop_front();
+
+        std::cout << "Consumed " << static_cast<int>(value) << std::endl;
+
+        /* Sleep for 200 miliseconds */
+        using namespace std::literals;
+        std::this_thread::sleep_for(200ms);
+    };
 
     /**
      * @brief Sequential produce and consume
@@ -42,31 +60,13 @@ int main()
          * @brief Produce a random number and send to buffer
          *
          */
-        p.Produce([]() {
-            /* Generating random number */
-            uint8_t value = random_number();
-
-            std::cout << "Produced " << static_cast<int>(value) << std::endl;
-
-            /* Sleep for 200 miliseconds */
-            using namespace std::literals;
-            std::this_thread::sleep_for(200ms);
-
-            /* Returns the value to store in buffer */
-            return value;
-        });
+        producer();
 
         /**
          * @brief Consumes the next buffered value
          *
          */
-        c.Consume([](uint8_t value) {
-            std::cout << "Consumed " << static_cast<int>(value) << std::endl;
-
-            /* Sleep for 200 miliseconds */
-            using namespace std::literals;
-            std::this_thread::sleep_for(200ms);
-        });
+        consumer();
     }
 
     return 0;

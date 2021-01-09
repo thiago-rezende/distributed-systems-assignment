@@ -9,9 +9,7 @@ set(THIRD_IMPLEMENTATION_INCLUDE_DIRS
 set(THIRD_IMPLEMENTATION_HEADERS
     "pch.h"
     "core/logger.h"
-    "base.hpp"
-    "producer.hpp"
-    "consumer.hpp"
+    "helpers.hpp"
 )
 
 # Source files

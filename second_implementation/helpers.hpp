@@ -13,16 +13,6 @@
 
 #include <second_implementation/pch.h>
 
-/* Implementation typedefs */
-template <typename _ReturnType>
-using ProducerFunction = std::function<_ReturnType()>;
-
-template <typename _BufferType>
-using ConsumerFunction = std::function<void(_BufferType)>;
-
-template <typename _Type>
-using Buffer = std::deque<_Type>;
-
 /* Implementation random number generator */
 unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 std::default_random_engine generator(seed);

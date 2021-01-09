@@ -32,9 +32,7 @@
     |    |    ├── logger.h          # Logger utils.
     |    |    └── logger.cpp        # Logger utils implementation.
     |    ├── pch.h                  # Pre-compiled header.
-    |    ├── base.hpp
-    |    ├── producer.hpp
-    |    ├── consumer.hpp
+    |    ├── helpers.hpp
     |    ├── main.cpp               # First impl entrypoint.
     |    └── CMakeLists.txt         # First impl CMake build script.
     ├──  second_implementation      # Second impl folder.
@@ -42,10 +40,8 @@
     |    |    ├── logger.h          # Logger utils.
     |    |    └── logger.cpp        # Logger utils implementation.
     |    ├── pch.h                  # Pre-compiled header.
-    |    ├── base.hpp
+    |    ├── helpers.hpp
     |    ├── sempahore.hpp          # Second impl semaphore.
-    |    ├── producer.hpp
-    |    ├── consumer.hpp
     |    ├── main.cpp               # Second impl entrypoint.
     |    └── CMakeLists.txt         # Second impl CMake build script.
     ├──  third_implementation       # Third impl folder.
@@ -53,9 +49,7 @@
     |    |    ├── logger.h          # Logger utils.
     |    |    └── logger.cpp        # Logger utils implementation.
     |    ├── pch.h                  # Pre-compiled header.
-    |    ├── base.hpp
-    |    ├── producer.hpp
-    |    ├── consumer.hpp
+    |    ├── helpers.hpp
     |    ├── main.cpp               # Third impl entrypoint.
     |    └── CMakeLists.txt         # Third impl CMake build script.
     ├── vendor                      # Third-party packages will be here.
@@ -66,7 +60,7 @@
 ## Instructions
 > Requirements
  - C++ 17 compatible compiler
- - CMake `>3.16.0`
+ - CMake `>=3.16.0`
  - Git
 
 > Clone the repo

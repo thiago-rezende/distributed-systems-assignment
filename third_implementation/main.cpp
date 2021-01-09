@@ -12,9 +12,7 @@
 #include <third_implementation/pch.h>
 #include <config.h>
 
-#include <third_implementation/base.hpp>
-#include <third_implementation/producer.hpp>
-#include <third_implementation/consumer.hpp>
+#include <third_implementation/helpers.hpp>
 
 /* Cli args utility */
 #include <CLI11.hpp>
@@ -27,10 +25,12 @@ int main(int argc, char **argv)
     /* User args */
     uint8_t producers_count = 5;
     uint8_t consumers_count = 5;
+    uint8_t max_buffer_size = 10;
 
     /* CLI options */
-    app.add_option("-p,--producers", producers_count, "Number of producers")->required()->check(CLI::Range(1, 255));
-    app.add_option("-c,--consumers", consumers_count, "Number of consumers")->required()->check(CLI::Range(1, 255));
+    app.add_option("-p,--producers", producers_count, "Number of producers")->required()->check(CLI::Range(1, 20));
+    app.add_option("-c,--consumers", consumers_count, "Number of consumers")->required()->check(CLI::Range(1, 20));
+    app.add_option("-b,--buffer", max_buffer_size, "Maximun buffer size")->check(CLI::Range(1, 20));
 
     /* Parse CLI args */
     CLI11_PARSE(app, argc, argv);
@@ -42,22 +42,15 @@ int main(int argc, char **argv)
     H_INFO("PROJECT NAME => {}", "Producer Consumer - Third Implementation");
     H_INFO("PROJECT VERSION => {}", PROJECT_VERSION);
 
-    /* Buffer maximum size */
-    const uint8_t max_buffer_size = 10;
-
     /* Application buffer */
-    Buffer<uint8_t> buffer;
-
-    /* Producer and Consumer */
-    Producer<uint8_t> p(&buffer);
-    Consumer<uint8_t> c(&buffer);
+    std::deque<uint8_t> buffer;
 
     /* Thread synt utils */
     std::mutex mut;
     std::condition_variable cv;
 
     /* Producer thread function */
-    std::function<void()> producer_thread_function = [&]() {
+    std::function<void()> producer = [&]() {
         while (true)
         {
             /* Lock and wait until has space to produce */
@@ -65,24 +58,24 @@ int main(int argc, char **argv)
             cv.wait(ul, [&]() { return buffer.size() < max_buffer_size; });
 
             /* Produce the data */
-            p.Produce([]() {
-                uint8_t value = random_number();
+            uint8_t value = random_number();
 
-                std::cout << "T[" << std::this_thread::get_id() << "] Produced " << static_cast<int>(value) << std::endl;
+            /* Store in buffer */
+            buffer.push_back(value);
 
-                /* Sleep for 200 miliseconds */
-                using namespace std::literals;
-                std::this_thread::sleep_for(200ms);
-                return value;
-            });
+            std::cout << "T[" << std::this_thread::get_id() << "] Produced " << static_cast<int>(value) << std::endl;
 
             /* Notify and release */
             cv.notify_all();
+
+            /* Sleep for 200 miliseconds */
+            using namespace std::literals;
+            std::this_thread::sleep_for(200ms);
         }
     };
 
     /* Consumer thread function */
-    std::function<void()> consumer_thread_function = [&]() {
+    std::function<void()> consumer = [&]() {
         while (true)
         {
             /* Lcok and wait until has data to consume */
@@ -90,16 +83,19 @@ int main(int argc, char **argv)
             cv.wait(ul, [&]() { return buffer.size() > 0; });
 
             /* Consumes data */
-            c.Consume([](uint8_t value) {
-                std::cout << "T[" << std::this_thread::get_id() << "] Consumed " << static_cast<int>(value) << std::endl;
+            uint8_t value = buffer.front();
 
-                /* Sleep for 200 miliseconds */
-                using namespace std::literals;
-                std::this_thread::sleep_for(200ms);
-            });
+            /* Remove from buffer */
+            buffer.pop_front();
+
+            std::cout << "T[" << std::this_thread::get_id() << "] Consumed " << static_cast<int>(value) << std::endl;
 
             /* Notify and release */
             cv.notify_all();
+
+            /* Sleep for 200 miliseconds */
+            using namespace std::literals;
+            std::this_thread::sleep_for(200ms);
         }
     };
 
@@ -109,11 +105,11 @@ int main(int argc, char **argv)
 
     /* Creating producer thread pool */
     for (size_t i = 0; i < producers_count; i++)
-        producer_thread_pool.push_back(std::thread(producer_thread_function));
+        producer_thread_pool.push_back(std::thread(producer));
 
     /* Creating consumer thread pool */
     for (size_t i = 0; i < consumers_count; i++)
-        consumer_thread_pool.push_back(std::thread(consumer_thread_function));
+        consumer_thread_pool.push_back(std::thread(consumer));
 
     /* Joining producer thread pool */
     for (size_t i = 0; i < producers_count; i++)

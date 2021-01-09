@@ -8,10 +8,8 @@ set(SECOND_IMPLEMENTATION_INCLUDE_DIRS
 set(SECOND_IMPLEMENTATION_HEADERS
     "pch.h"
     "core/logger.h"
-    "base.hpp"
+    "helpers.hpp"
     "semaphore.hpp"
-    "producer.hpp"
-    "consumer.hpp"
 )
 
 # Source files

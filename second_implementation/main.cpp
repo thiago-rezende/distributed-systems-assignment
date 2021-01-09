@@ -12,10 +12,8 @@
 #include <second_implementation/pch.h>
 #include <config.h>
 
-#include <second_implementation/base.hpp>
+#include <second_implementation/helpers.hpp>
 #include <second_implementation/semaphore.hpp>
-#include <second_implementation/producer.hpp>
-#include <second_implementation/consumer.hpp>
 
 int main()
 {
@@ -30,17 +28,13 @@ int main()
     const uint8_t max_buffer_size = 10;
 
     /* Application buffer */
-    Buffer<uint8_t> buffer;
-
-    /* Producer and Consumer */
-    Producer<uint8_t> p(&buffer);
-    Consumer<uint8_t> c(&buffer);
+    std::deque<uint8_t> buffer;
 
     /* Application semaphore */
     Semaphore sem(1);
 
-    /* Producer thread function */
-    std::function<void()> producer_thread_function = [&]() {
+    /*Producer function */
+    std::function<void()> producer = [&]() {
         while (true)
         {
             /* lock */
@@ -52,15 +46,17 @@ int main()
              */
             while (buffer.size() != max_buffer_size)
             {
-                p.Produce([]() {
-                    uint8_t value = random_number();
-                    std::cout << "Produced " << static_cast<int>(value) << std::endl;
+                /* Generating random runber */
+                uint8_t value = random_number();
 
-                    /* Sleep for 200 miliseconds */
-                    using namespace std::literals;
-                    std::this_thread::sleep_for(200ms);
-                    return value;
-                });
+                std::cout << "Produced " << static_cast<int>(value) << std::endl;
+
+                /* Sending to buffer */
+                buffer.push_back(value);
+
+                /* Sleep for 200 miliseconds */
+                using namespace std::literals;
+                std::this_thread::sleep_for(200ms);
             }
 
             /* Release */
@@ -68,8 +64,8 @@ int main()
         }
     };
 
-    /* Conusumer thread function */
-    std::function<void()> consumer_thread_function = [&]() {
+    /*Consumer function */
+    std::function<void()> consumer = [&]() {
         while (true)
         {
             /* Lock */
@@ -81,13 +77,17 @@ int main()
              */
             while (buffer.size() != 0)
             {
-                c.Consume([](uint8_t value) {
-                    std::cout << "Consumed " << static_cast<int>(value) << std::endl;
+                /* Getting the next buffered value */
+                uint8_t value = buffer.front();
 
-                    /* Sleep for 200 miliseconds */
-                    using namespace std::literals;
-                    std::this_thread::sleep_for(200ms);
-                });
+                /* Removing from buffer */
+                buffer.pop_front();
+
+                std::cout << "Consumed " << static_cast<int>(value) << std::endl;
+
+                /* Sleep for 200 miliseconds */
+                using namespace std::literals;
+                std::this_thread::sleep_for(200ms);
             }
 
             /* Release */
@@ -96,8 +96,8 @@ int main()
     };
 
     /* Create producer and consumer threads */
-    std::thread producer_thread(producer_thread_function);
-    std::thread consumer_thread(consumer_thread_function);
+    std::thread producer_thread(producer);
+    std::thread consumer_thread(consumer);
 
     /* Join porducer and consumer threads */
     producer_thread.join();
