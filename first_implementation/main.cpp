@@ -28,24 +28,48 @@ int main()
 
     /* Producer function */
     std::function<void()> producer = [&]() {
+        /* Getting thread id */
+        std::stringstream ss;
+        ss << std::this_thread::get_id();
+        std::string thread_id = ss.str();
+
+        H_DEBUG("Producer#{} started", thread_id);
+
+        /* Generating random number */
+        H_DEBUG("Producer#{} generating random value", thread_id);
         uint8_t value = random_number();
+
+        H_DEBUG("Producer#{} sending value to buffer", thread_id);
         buffer.push_back(value);
 
-        std::cout << "Produced " << static_cast<int>(value) << std::endl;
+        std::cout << "Thread#" << thread_id << " Produced " << static_cast<int>(value) << std::endl;
 
         /* Sleep for 200 miliseconds */
+        H_DEBUG("Producer#{} sleeping", thread_id);
         using namespace std::literals;
         std::this_thread::sleep_for(200ms);
     };
 
     /* Consumer function */
     std::function<void()> consumer = [&]() {
+        /* Getting thread id */
+        std::stringstream ss;
+        ss << std::this_thread::get_id();
+        std::string thread_id = ss.str();
+
+        H_DEBUG("Conusmer#{} started", thread_id);
+
+        /* Getting the next buffered value */
+        H_DEBUG("Consumer#{} getting next buffered value", thread_id);
         uint8_t value = buffer.front();
+
+        H_DEBUG("Consumer#{} removing consumed value from buffer", thread_id);
         buffer.pop_front();
 
-        std::cout << "Consumed " << static_cast<int>(value) << std::endl;
+        std::cout << "Thread#" << thread_id << " Consumed " << static_cast<int>(value) << std::endl;
 
         /* Sleep for 200 miliseconds */
+        H_DEBUG("Consumer#{} sleeping", thread_id);
         using namespace std::literals;
         std::this_thread::sleep_for(200ms);
     };

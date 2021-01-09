@@ -53,22 +53,33 @@ int main(int argc, char **argv)
     std::function<void()> producer = [&]() {
         while (true)
         {
+            /* Getting thread id */
+            std::stringstream ss;
+            ss << std::this_thread::get_id();
+            std::string thread_id = ss.str();
+
             /* Lock and wait until has space to produce */
             std::unique_lock<std::mutex> ul(mut);
+
+            H_DEBUG("Producer#{} waiting", thread_id);
             cv.wait(ul, [&]() { return buffer.size() < max_buffer_size; });
 
             /* Produce the data */
+            H_DEBUG("Producer#{} generating random value", thread_id);
             uint8_t value = random_number();
 
             /* Store in buffer */
+            H_DEBUG("Producer#{} sending value to buffer", thread_id);
             buffer.push_back(value);
 
-            std::cout << "T[" << std::this_thread::get_id() << "] Produced " << static_cast<int>(value) << std::endl;
+            std::cout << "Thread#" << thread_id << " Produced " << static_cast<int>(value) << std::endl;
 
             /* Notify and release */
+            H_DEBUG("Producer#{} notify", thread_id);
             cv.notify_all();
 
             /* Sleep for 200 miliseconds */
+            H_DEBUG("Producer#{} sleeping", thread_id);
             using namespace std::literals;
             std::this_thread::sleep_for(200ms);
         }
@@ -78,22 +89,35 @@ int main(int argc, char **argv)
     std::function<void()> consumer = [&]() {
         while (true)
         {
+            /* Getting thread id */
+            std::stringstream ss;
+            ss << std::this_thread::get_id();
+            std::string thread_id = ss.str();
+
             /* Lcok and wait until has data to consume */
             std::unique_lock<std::mutex> ul(mut);
+
+            H_DEBUG("Conusmer#{} waiting", thread_id);
             cv.wait(ul, [&]() { return buffer.size() > 0; });
 
+            H_DEBUG("Conusmer#{} started", thread_id);
+
             /* Consumes data */
+            H_DEBUG("Consumer#{} getting next buffered value", thread_id);
             uint8_t value = buffer.front();
 
             /* Remove from buffer */
+            H_DEBUG("Consumer#{} removing consumed value from buffer", thread_id);
             buffer.pop_front();
 
-            std::cout << "T[" << std::this_thread::get_id() << "] Consumed " << static_cast<int>(value) << std::endl;
+            std::cout << "Thread#" << thread_id << " Consumed " << static_cast<int>(value) << std::endl;
 
             /* Notify and release */
+            H_DEBUG("Conusmer#{} notify", thread_id);
             cv.notify_all();
 
             /* Sleep for 200 miliseconds */
+            H_DEBUG("Conusmer#{} sleeping", thread_id);
             using namespace std::literals;
             std::this_thread::sleep_for(200ms);
         }

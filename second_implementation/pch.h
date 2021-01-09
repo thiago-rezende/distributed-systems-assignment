@@ -17,6 +17,8 @@
 #include <chrono>
 #include <random>
 #include <thread>
+#include <string>
+#include <sstream>
 #include <iostream>
 #include <functional>
 #include <condition_variable>
